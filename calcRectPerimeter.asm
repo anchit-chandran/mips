@@ -24,12 +24,17 @@
 	syscall
 	sw $v0, height
 	
-	# Calculate area, store
+	# Calculate perimeter, store
 	lw $s0, width
 	lw $s1, height
-	mult $s0, $s1 # width x height
-	mflo $s0 # move area into $s0
-	sw $s0, area
+
+	sll $t1, $s0, 1 # width * 2
+	sll $t2, $s1, 1 # height * 2
+	
+	# perimeter(height) + perimeter(width)
+	add $s0, $t1, $t2
+	
+	sw $s0, area # store area
 	
 	# print area
 	la $a0, answerMsg
