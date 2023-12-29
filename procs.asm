@@ -1,8 +1,8 @@
 .data
 	newLine: .asciiz "\n"
-	.text
-	.globl main
-main:	
+
+.text
+
 
 	# initialise value inside $s0
 	addi $s0, $0, 10
