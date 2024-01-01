@@ -3,7 +3,7 @@
 	bitmap: .space 262144 # allocate 256x256 bytes (pixels) to draw
 
 .text
-
+	li $s7, 0x00000000 # color black (0x00RRGGBB)
 	li $s1, 0x00FF0000 # color red (0x00RRGGBB)
 	li $a0, 0 # x coord
 	li $a1, 0 # y coord
@@ -12,16 +12,56 @@
 	
 	# Draw pixel going across 32x32 grid
 	loop:
-		bge $s0, 31, end
+		bge $s0, 1024, end
+
+		li $t0, 32
+		div $s0, $t0
+		mfhi $a0 # x = pos % 32
+		mflo $a1 # y= pos // 32
+		move $a3, $s1 # set color red
+		jal drawPixel 
 		
+		jal delay
+		
+		# clean pixel
+		move $a3, $s7 # change color to black
 		jal drawPixel
-		add $a0, $a0, 1 # increment x
-		add $a1, $a1, 1 # increment y
+
+		# increment pixel pos
+		addi $s0, $s0, 1
+	j loop
+	
+	# def delay(int $a0: amount)
+	delay:
+		addi $sp, $sp, -8
+		sw $ra, 0($sp)
+		sw $t0, 4($sp)
 		
-		addi $s0, $s0, 1 # increment pixel pos
-		j loop
+		li $t0, 100
+		delayLoop:
+			beqz $t0, endDelayLoop
+			addi $t0, $t0, -1 # decrement 
+			j delayLoop
+		endDelayLoop:
+		lw $t0, 4($sp)
+		lw $ra, 0($sp)
+		addi $sp, $sp, 8
+		jr $ra
 	
-	
+	awaitInput:
+		addi $sp, $sp -8
+		sw $ra, 0($sp)
+		sw $v0, 4($sp)
+		
+		li $v0, 5
+		syscall
+		
+		beqz $v0, end
+		
+		lw $v0, 4($sp)
+		lw $ra, 0($sp)
+		addi $sp, $sp, 8
+		jr $ra
 	
 	end:
 	li $v0, 10
