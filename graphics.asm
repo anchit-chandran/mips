@@ -5,13 +5,21 @@
 .text
 
 	li $s1, 0x00FF0000 # color red (0x00RRGGBB)
-	
-	
-	# 32x32 grid
-	li $a0, 31 # x coord
-	li $a1, 31 # y coord
+	li $a0, 0 # x coord
+	li $a1, 0 # y coord
 	move $a3, $s1 # color
-	jal drawPixel
+	li $s0, 0 # current pixel pos
+	
+	# Draw pixel going across 32x32 grid
+	loop:
+		bge $s0, 31, end
+		
+		jal drawPixel
+		add $a0, $a0, 1 # increment x
+		add $a1, $a1, 1 # increment y
+		
+		addi $s0, $s0, 1 # increment pixel pos
+		j loop
 	
 	
 	
