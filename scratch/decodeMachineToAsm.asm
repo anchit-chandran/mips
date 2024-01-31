@@ -1,5 +1,5 @@
 .data
-	test: .word 0x200800000x200800000x20080000
+	test: .word 0001
 
 .text
 	la $a0, test

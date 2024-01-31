@@ -1,0 +1,28 @@
+        INP A
+        STA A
+        INP B
+        STA B
+        INP C
+        STA C
+        LDA A
+        SUB C
+        STA SUB_TEMP
+MULT_LOOP LDA B
+        BRZ AFTER_MULT
+        LDA A
+        ADD MULT_TEMP
+        STA MULT_TEMP
+        LDA B
+        SUB ONE
+        STA B
+        BRA MULT_LOOP
+AFTER_MULT LDA MULT_TEMP
+        ADD SUB_TEMP
+        OUT
+        HLT
+A       DAT 0
+B       DAT 0
+C       DAT 0
+SUB_TEMP DAT 0
+MULT_TEMP DAT 0
+ONE     DAT 1
