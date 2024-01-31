@@ -25,6 +25,8 @@
 		beq $s0, 0x77, pressUp # w 
 		beq $s0, 0x73, pressDown # s
 		beq $s0, 0x65, nextColor # e
+		
+		li $s0, 0
 
 		updatePixel:
 		jal delay
