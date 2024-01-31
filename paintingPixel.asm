@@ -1,3 +1,11 @@
+# required bitmap display settings:
+# unit width in pixels = 8
+# unit height in pixels = 8
+# display width in pixels = 256
+# display height in pixels = 256
+# base address for display = ($gp)
+
+
 .data
 	.align 2 # ensure word-aligned bitmap array
 	bitmap: .space 262144 # allocate 256x256 bytes (pixels) to draw
@@ -12,6 +20,7 @@
 		li $a1, 16 # y=16
 		li $s6, 0 # current color index
 		lw $a3, colors($s6) # color[0]=red
+		li $s4, 10000 # ************ADJUST THIS FOR PIXEL MOVEMENT SPEED
 		jal drawPixel
 	
 	mainLoop:
@@ -27,6 +36,7 @@
 		beq $s0, 0x65, nextColor # e
 		
 		li $s0, 0
+		sw $s0, 0xffff0004
 
 		updatePixel:
 		jal delay
@@ -61,7 +71,7 @@
 		sw $ra, 0($sp)
 		sw $t0, 4($sp)
 		
-		li $t0, 600
+		move $t0, $s4 # delay amount 
 		delayLoop:
 			beqz $t0, endDelayLoop
 			addi $t0, $t0, -1 # decrement 
